@@ -81,3 +81,7 @@ gulp develop
 ```
 
 Your BrowserSync proxy (where you should access the development site) will be available at **localhost:3000/your_site/**. The BrowserSync UI will be available at **localhost:8001**.
+
+## More
+
+You can find a detailed descripition of **gulpfile.js** and more instructions in my [blog post on this configuration](https://danielcassman.com/posts/2023/08/11/wordpress-development-with-xampp-gulp-and-sass/).
