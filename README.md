@@ -14,7 +14,7 @@ Then enter the directory for your WordPress theme and run the following commands
 
 ```bash
 npm init
-npm install --save-dev autoprefixer browser-sync cssnano gulp-concat gulp-deporder gulp-imagemin gulp-newer gulp-postcss gulp-sass gulp-strip-debug gulp-uglify postcss-assets
+npm install --save-dev gulp autoprefixer browser-sync cssnano gulp-concat gulp-deporder gulp-imagemin gulp-newer sass gulp-sass gulp-strip-debug gulp-uglify
 ```
 
 Next, copy **gulpfile.js** from this repository into the theme directory.

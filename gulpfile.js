@@ -76,7 +76,6 @@ const css = {
   build       : dir.build,
   sassOpts: {
     outputStyle     : 'compressed',
-    imagePath       : images.build,
     precision       : 3,
     errLogToConsole : true
   },
