@@ -46,7 +46,7 @@ const
   import concat from "gulp-concat";   // Not necessary if you don't want to combine files; see line 121
   import stripdebug from "gulp-strip-debug";
   import uglify from "gulp-uglify";
-  import browserSync   from 'browser-sync';
+  import browserSync from 'browser-sync';
   import autoprefixer from "autoprefixer";
   import cssnano from "cssnano";
 
