@@ -80,7 +80,11 @@ Start XAMPP via the XAMPP control panel. Then open your terminal in the theme di
 gulp develop
 ```
 
-Your BrowserSync proxy (where you should access the development site) will be available at **localhost:3000/your_site/**. The BrowserSync UI will be available at **localhost:8001**.
+Your BrowserSync proxy (where you should access the development site) will be available at **localhost:3000/your_site/**. The BrowserSync UI will be available at **localhost:8001**. Note that the development environment does **not** minify scrips or CSS so that debugging will be easier. You should run **gulp test** (see below) or **gulp build** before pushing changes to production.
+
+## Running the Test Environment
+
+You can also run a test that's a little more like a production environment with **gulp test**. It's very similar to **gulp develop**, except that it will minify scripts and CSS.
 
 ## More
 

@@ -79,6 +79,11 @@ const css = {
     precision       : 3,
     errLogToConsole : true
   },
+  devOpts: {
+    outputStyle     : 'expanded',
+    precision       : 3,
+    errLogToConsole : true
+  },
   processors: [
     autoprefixer(),
     cssnano()
@@ -86,26 +91,31 @@ const css = {
 };
 
 // CSS processing
-function processPrimarySass() {
+function processPrimarySass( dev = false ) {
   return src(css.src)
-    .pipe(sass(css.sassOpts))
+    .pipe(sass(dev ? css.devOpts : css.sassOpts))
     .pipe(dest(`${css.build}`))
     .pipe(browsersync ? browsersync.reload({ stream: true }) : gutil.noop());
 }
 
-function processOtherSass() {
+function processOtherSass( dev = false ) {
   return src([css.watch, `!${css.src}`])
-    .pipe(sass(css.sassOpts))
+    .pipe(sass(dev ? css.devOpts : css.sassOpts))
     .pipe(dest(`${css.build}css`))
     .pipe(browsersync ? browsersync.reload({ stream: true }) : gutil.noop());
 }
 
-async function processSass() {
-  processPrimarySass();
-  processOtherSass();
+async function processSass(dev = false) {
+  processPrimarySass(dev);
+  processOtherSass(dev);
 }
 
-gulp.task('css', processSass );
+gulp.task('css', async() => {
+  processSass(false)
+});
+gulp.task('cssdev', async () => {
+  processSass(true);
+});
 
 // JavaScript settings
 const js = {
@@ -114,18 +124,28 @@ const js = {
   filename    : 'scripts.js'
 };
 
-function processJs() {
-  return gulp.src(js.src)
+function processJs( dev = false ) {
+  let jsOutput = gulp.src(js.src)
     .pipe(deporder())
 //  .pipe(concat(js.filename))  Uncomment this line if you want to combine Javascript files
-    .pipe(stripdebug())
-    .pipe(uglify())
-    .pipe(gulp.dest(js.build))
+    
+  if( !dev ) {
+    jsOutput = jsOutput.pipe(stripdebug())
+    .pipe(uglify());
+  }
+    
+  jsOutput = jsOutput.pipe(gulp.dest(js.build))
     .pipe(browsersync ? browsersync.reload({ stream: true }) : gutil.noop());
+  return jsOutput;
 }
 
 // JavaScript processing
-gulp.task('js', processJs);
+gulp.task('js', async () => {
+  processJs(false);
+});
+gulp.task('jsdev', async () => {
+  processJs(true);
+});
 
 // Run all tasks
 gulp.task('build', series('images', 'css', 'js'));
@@ -167,11 +187,24 @@ gulp.task('watch', series('browsersync', async () => {
   watch(images.src, series('images'));
 
   // CSS changes
-  watch(css.watch, series(processSass, reload));
+  watch(css.watch, series('css', reload));
 
   // JavaScript main changes
-  watch(js.src, series(processJs, reload));
+  watch(js.src, series('js', reload));
+}));
+
+gulp.task('watchdev', series('browsersync', async () => {
+
+  // image changes
+  watch(images.src, series('images'));
+
+  // CSS changes
+  watch(css.watch, series('cssdev', reload));
+
+  // JavaScript main changes
+  watch(js.src, series('jsdev', reload));
 }));
 
 // Build site and start watching
-gulp.task('develop', series('build', 'watch'));
+gulp.task('test', series('build', 'watch'));
+gulp.task('develop', series('images', 'cssdev', 'jsdev', 'watchdev'));
